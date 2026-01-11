@@ -37,8 +37,8 @@ node {
       set -e
       chmod 600 \$KEYFILE
 
-      echo "Deploying to EC2: run app for 60s"
-      ssh -o StrictHostKeyChecking=no -i \$KEYFILE \$SSHUSER@EC2_PUBLIC_IP 'python3 -c "import time; print(\\"App started on EC2\\"); time.sleep(60); print(\\"App finished\\")"'
+      echo "Deploying to EC2: \$SSHUSER@\$EC2_HOST (run app for 60s)"
+      ssh -o StrictHostKeyChecking=no -i \$KEYFILE \$SSHUSER@\$EC2_HOST 'python3 -c "import time; print(\\"App started on EC2\\"); time.sleep(60); print(\\"App finished\\")"'
     """
   }
 }
