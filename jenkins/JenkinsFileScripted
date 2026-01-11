@@ -26,4 +26,20 @@ node {
     }
     archiveArtifacts artifacts: 'dist/*.tar.gz', allowEmptyArchive: false
   }
+
+  stage('Manual Approval') {
+    input message: 'Lanjutkan ke tahap Deploy?'
+  }
+
+  stage('Deploy') {
+  withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'KEYFILE', usernameVariable: 'SSHUSER')]) {
+    sh """
+      set -e
+      chmod 600 \$KEYFILE
+
+      echo "Deploying to EC2: run app for 60s"
+      ssh -o StrictHostKeyChecking=no -i \$KEYFILE \$SSHUSER@EC2_PUBLIC_IP 'python3 -c "import time; print(\\"App started on EC2\\"); time.sleep(60); print(\\"App finished\\")"'
+    """
+  }
+}
 }
